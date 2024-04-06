@@ -65,4 +65,83 @@ export const categoryRouter = createTRPCRouter({
         },
       });
     }),
+  getPaginatedCategories: publicProcedure
+    .input(
+      z.object({
+        userId: z.number(),
+        page: z.number().default(1),
+        pageSize: z.number().default(10),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { userId, page, pageSize } = input;
+      const skip = (page - 1) * pageSize;
+
+     
+      const totalSelected = await ctx.db.category.count({
+        where: {
+          users: {
+            some: {
+              id: userId,
+            },
+          },
+        },
+      });
+
+      const selectedToFetch = Math.min(pageSize, totalSelected - skip);
+      let categoriesWithSelectionStatus: {
+        id: number;
+        name: string;
+      }[] = [];
+
+      if (selectedToFetch > 0) {
+       
+        const selectedCategories = await ctx.db.category.findMany({
+          where: {
+            users: {
+              some: {
+                id: userId,
+              },
+            },
+          },
+          skip,
+          take: selectedToFetch,
+        });
+
+        categoriesWithSelectionStatus = selectedCategories.map((category) => ({
+          ...category,
+          isSelected: true,
+        }));
+      }
+
+      if (categoriesWithSelectionStatus.length < pageSize) {
+        const unselectedSkip = Math.max(0, skip - totalSelected);
+        
+        const unselectedCategories = await ctx.db.category.findMany({
+          where: {
+            NOT: {
+              users: {
+                some: {
+                  id: userId,
+                },
+              },
+            },
+          },
+          skip: unselectedSkip,
+          take: pageSize - categoriesWithSelectionStatus.length,
+        });
+
+        const unselectedWithStatus = unselectedCategories.map((category) => ({
+          ...category,
+          isSelected: false,
+        }));
+
+        categoriesWithSelectionStatus = [
+          ...categoriesWithSelectionStatus,
+          ...unselectedWithStatus,
+        ];
+      }
+
+      return categoriesWithSelectionStatus;
+    }),
 });

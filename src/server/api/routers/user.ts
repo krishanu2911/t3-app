@@ -92,6 +92,7 @@ export const userRouter = createTRPCRouter({
 
         return {
           message: "otp verified!!!",
+          userId: user.id,
         };
       } catch (error) {
         throw error;
@@ -114,6 +115,13 @@ export const userRouter = createTRPCRouter({
           });
         }
 
+        if (!userDetails.isVerified) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Account not verified please sign up again.",
+          });
+        }
+
         const passwordCorrectFlag = await bcrypt.compare(
           input.password,
           userDetails.password
@@ -123,6 +131,7 @@ export const userRouter = createTRPCRouter({
           return {
             message: "login successfull!!!",
             success: true,
+            userId: userDetails.id,
           };
         } else {
           return {
