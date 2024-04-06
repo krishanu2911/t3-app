@@ -10,10 +10,7 @@ const OtpInput: React.FC<OTPInputProps> = ({ length, onOTPComplete }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    const refs = inputRefs.current;
-    refs.length = length;
-    refs.fill(null);
-    refs[0]?.focus();
+    inputRefs.current[0]?.focus();
   }, [length]);
 
   const handleOTPChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -59,7 +56,7 @@ const OtpInput: React.FC<OTPInputProps> = ({ length, onOTPComplete }) => {
           onChange={(e) => handleOTPChange(e, index)}
           onKeyDown={(e) => handleOTPKeyDown(e, index)}
           ref={(el) => setInputRef(el, index)}
-          className=' border border-[#C1C1C1] rounded-md w-full h-12'
+          className=' border border-[#C1C1C1] rounded-md w-full h-12 text-center'
         />
       ))}
     </div>

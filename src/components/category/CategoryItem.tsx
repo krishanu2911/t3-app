@@ -27,7 +27,7 @@ const CategoryItem: React.FC<Props> = ({ data }) => {
       } catch (error) {
         console.log(error);
       }
-    }, 300);
+    }, 150);
 
     return () => {
       clearTimeout(timer);
