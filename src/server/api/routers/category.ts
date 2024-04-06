@@ -77,7 +77,8 @@ export const categoryRouter = createTRPCRouter({
       const { userId, page, pageSize } = input;
       const skip = (page - 1) * pageSize;
 
-     
+      const totalCount = await ctx.db.category.count();
+      const totalPages = Math.ceil(totalCount / pageSize);
       const totalSelected = await ctx.db.category.count({
         where: {
           users: {
@@ -92,10 +93,10 @@ export const categoryRouter = createTRPCRouter({
       let categoriesWithSelectionStatus: {
         id: number;
         name: string;
+        isSelected: boolean;
       }[] = [];
 
       if (selectedToFetch > 0) {
-       
         const selectedCategories = await ctx.db.category.findMany({
           where: {
             users: {
@@ -116,7 +117,7 @@ export const categoryRouter = createTRPCRouter({
 
       if (categoriesWithSelectionStatus.length < pageSize) {
         const unselectedSkip = Math.max(0, skip - totalSelected);
-        
+
         const unselectedCategories = await ctx.db.category.findMany({
           where: {
             NOT: {
@@ -142,6 +143,6 @@ export const categoryRouter = createTRPCRouter({
         ];
       }
 
-      return categoriesWithSelectionStatus;
+      return{ items: categoriesWithSelectionStatus, totalPages: totalPages};
     }),
 });
