@@ -18,7 +18,7 @@ export const userRouter = createTRPCRouter({
         where: { email: input.email },
       });
 
-      if (existedUser && existedUser.isVerified) {
+      if (existedUser?.isVerified) {
         throw new TRPCError({
           code: "CONFLICT",
           message: "Already created account with this email.",

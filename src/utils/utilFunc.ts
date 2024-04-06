@@ -26,13 +26,13 @@ export const generatePagination = (
   totalPages: number,
   contextPages: number = 4
 ): PageNumberTile[] => {
-  let pages: PageNumberTile[] = [];
+  const pages: PageNumberTile[] = [];
 
   pages.push(1);
 
 
-  let startContext = Math.max(currentPage - contextPages, 2);
-  let endContext = Math.min(currentPage + contextPages, totalPages - 1);
+  const startContext = Math.max(currentPage - contextPages, 2);
+  const endContext = Math.min(currentPage + contextPages, totalPages - 1);
 
   if (startContext > 2) {
     pages.push("...");

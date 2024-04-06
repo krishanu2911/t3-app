@@ -1,6 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
 import { api } from "@/utils/api";
-import Image from "next/image";
 import { useState } from "react";
 import LoadingItem from "./LoadingItem";
 import ItemsSection from "./ItemsSection";
@@ -48,13 +47,13 @@ const Category = () => {
         {isLoading ? (
           <LoadingItem />
         ) : (
-          <ItemsSection data={data?.items || []} />
+          <ItemsSection data={data?.items ?? []} />
         )}
         <PageIndicator
           prevHandler={prevHandler}
           nextHandler={nextHandler}
           pageClickHandler={pageClickHandler}
-          totalPage={data?.totalPages || 0}
+          totalPage={data?.totalPages ?? 0}
           currentPage={currentPage}
         />
       </div>

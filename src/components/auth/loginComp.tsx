@@ -1,6 +1,5 @@
 import { emailRegex } from "@/constants/regex";
 import { api } from "@/utils/api";
-import { TRPCError } from "@trpc/server";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -25,13 +24,14 @@ const LoginComp = () => {
       if (success && userId) {
         toast.success(message);
         localStorage.setItem("userId", `${userId}`);
-        router.push("/");
+        await router.push("/");
       } else {
         toast.error("login error");
         return;
       }
     } catch (error) {
-      toast.error(`${error}`);
+      //   toast.error(`${error}`);
+      console.log(error);
     }
   };
   return (

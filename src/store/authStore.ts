@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-interface userInterface {
-  id: number;
-  email: string;
-  name?: string;
-}
+// interface userInterface {
+//   id: number;
+//   email: string;
+//   name?: string;
+// }
 
 interface UserAuthStoreInterface {
   userEmail: string | null;
@@ -14,7 +14,7 @@ interface UserAuthStoreInterface {
   setBackendOtpEmail: (otp: string, email: string) => void;
 }
 
-export const useAuthStore = create<UserAuthStoreInterface>((set, get) => ({
+export const useAuthStore = create<UserAuthStoreInterface>((set) => ({
   userEmail: null,
   backendOtp: null,
   userLogged: null,

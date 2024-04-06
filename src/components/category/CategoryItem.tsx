@@ -17,12 +17,12 @@ const CategoryItem: React.FC<Props> = ({ data }) => {
   const removeItemMutation = api.category.removeCategoryFromUser.useMutation();
 
   useEffect(() => {
-    const timer = setTimeout(async () => {
+    const timer = setTimeout( () => {
       try {
         if (selected) {
-          await addItemMutation.mutateAsync({ userId, categoryId: data.id });
+           addItemMutation.mutate({ userId, categoryId: data.id });
         } else {
-          await removeItemMutation.mutateAsync({ userId, categoryId: data.id });
+           removeItemMutation.mutate({ userId, categoryId: data.id });
         }
       } catch (error) {
         console.log(error);

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { api } from "@/utils/api";
 import { useState } from "react";
-import { z } from "zod";
 import { emailRegex } from "@/constants/regex";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -25,24 +24,25 @@ const SignUpComp = () => {
 
       if (data.otp) {
         setBackendOtpEmail(data.otp, email);
-        router.push("/auth/signup/verifyotp");
+      await  router.push("/auth/signup/verifyotp");
       } else {
         toast.error(`Please re-try!`);
       }
     } catch (error) {
-      toast.error(`${error}`);
+    //   toast.error(`${error}`);
+    console.log(error)
       // TO DO: Save the error message and show client
     }
   };
 
-  const signHandler = () => {
+  const signHandler = async () => {
     if (
       userName !== "" &&
       email !== "" &&
       password !== "" &&
       emailRegex.test(email)
     ) {
-      signInUser(userName, email, password);
+     await signInUser(userName, email, password);
     } else {
       toast.error("Please fill all the detail properly.");
     }

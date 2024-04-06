@@ -1,4 +1,3 @@
-import Link from "next/link";
 import OtpInput from "./otpInput";
 import { useAuthStore } from "@/store/authStore";
 import { maskEmail } from "@/utils/utilFunc";
@@ -30,10 +29,11 @@ const VerifyOtpComp = () => {
 
         localStorage.setItem("userId", `${userId}`);
         toast.success(message);
-        router.push("/");
+       await router.push("/");
       }
     } catch (error) {
-      toast.error(`${error}`);
+    //   toast.error(`${error}`);
+    console.log(error)
     }
   };
   return (
@@ -44,7 +44,7 @@ const VerifyOtpComp = () => {
       <h1 className=" text-center text-base">
         Enter the 8 digit code you have received on <br />
         <span className=" font-medium">
-          {maskEmail(email || "test@gmail.com")}
+          {maskEmail(email ?? "test@gmail.com")}
         </span>
       </h1>
       <OtpInput length={6} onOTPComplete={(otp: string) => setUserOtp(otp)} />

@@ -12,15 +12,18 @@ const ProtectedRoute: React.FC<Props> = ({ children }) => {
     setUserLogged: state.setUserLogged,
   }));
   const router = useRouter();
+  const navigateToLogin = async () => {
+    await router.replace("/auth/login");
+  }
 
   useEffect(() => {
     const user = localStorage.getItem("userId");
     if (!user) {
-      router.replace("/auth/login");
+      navigateToLogin();
     } else {
       setUserLogged(user);
     }
-  }, [router]);
+  }, [router, setUserLogged]);
 
   return user ? <>{children}</> : null;
 };
