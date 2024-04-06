@@ -19,9 +19,9 @@ const ProtectedRoute: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     const user = localStorage.getItem("userId");
     if (!user) {
-      (async () => {
-        await navigateToLogin();
-      })();
+      navigateToLogin().catch((error) => {
+        console.error("Failed to navigate:", error);
+      });
     } else {
       setUserLogged(user);
     }
