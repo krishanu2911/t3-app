@@ -1,11 +1,12 @@
 import Head from "next/head";
 import { api } from "@/utils/api";
 import RootLayout from "@/components/layout/rootLayout";
+import ProtectedRoute from "@/components/protectedRoute";
 
 export default function Home() {
   const signUpUserMutation = api.user.signUp.useMutation();
   const loginMutation = api.user.login.useMutation();
-  // const {data} = api.category.getPaginatedCategories.useQuery({userId: 5 , page: 11}); 
+  // const {data} = api.category.getPaginatedCategories.useQuery({userId: 5 , page: 11});
   // console.log(data)
 
   const signInUser = async (name: string, email: string, password: string) => {
@@ -35,23 +36,25 @@ export default function Home() {
   };
 
   return (
-    <RootLayout>
-      <>
-      <Head>
-        <title>Create T3 App</title>
-      </Head>
-      <main className="w-full min-h-screen">
-        <button
-          onClick={() => signInUser("test1", "test1@gmail.com", "test1@1234")}
-        >
-          SignUp
-        </button>
-        <button onClick={loginInUser}>Login</button>
-        {/* <button onClick={() => addCategoryMution.mutate({userId: 5 , categoryId: 43})}>add</button> */}
-      </main>
-      </>
-    </RootLayout>
+    <ProtectedRoute>
+      <RootLayout>
+        <>
+          <Head>
+            <title>Create T3 App</title>
+          </Head>
+          <main className="w-full min-h-screen">
+            <button
+              onClick={() =>
+                signInUser("test1", "test1@gmail.com", "test1@1234")
+              }
+            >
+              SignUp
+            </button>
+            <button onClick={loginInUser}>Login</button>
+            {/* <button onClick={() => addCategoryMution.mutate({userId: 5 , categoryId: 43})}>add</button> */}
+          </main>
+        </>
+      </RootLayout>
+    </ProtectedRoute>
   );
 }
-
-
