@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import LoadingItem from "./LoadingItem";
 import ItemsSection from "./ItemsSection";
+import PageIndicator from "./PageIndicator";
 
 const Category = () => {
   const userId = useAuthStore((state) => Number(state.userLogged));
@@ -14,6 +15,22 @@ const Category = () => {
     pageSize: 6,
     page: currentPage,
   });
+
+  const prevHandler = () => {
+    if (currentPage < 1) {
+      setCurrentPage((prev) => --prev);
+    }
+  };
+
+  const nextHandler = () => {
+    if (data?.totalPages && currentPage < data?.totalPages) {
+      setCurrentPage((prev) => ++prev);
+    }
+  };
+
+  const pageClickHandler = (pgNo: number) => {
+    setCurrentPage(pgNo);
+  };
 
   return (
     <div className="w-full  border border-[#C1C1C1] rounded-2xl md:gap-8 gap-4 md:p-10 p-4 flex flex-col">
@@ -33,6 +50,13 @@ const Category = () => {
         ) : (
           <ItemsSection data={data?.items || []} />
         )}
+        <PageIndicator
+          prevHandler={prevHandler}
+          nextHandler={nextHandler}
+          pageClickHandler={pageClickHandler}
+          totalPage={data?.totalPages || 0}
+          currentPage={currentPage}
+        />
       </div>
     </div>
   );

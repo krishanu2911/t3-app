@@ -18,3 +18,37 @@ export const maskEmail = (email: string) => {
 
   return email;
 };
+
+type PageNumberTile = number | "...";
+
+export const generatePagination = (
+  currentPage: number,
+  totalPages: number,
+  contextPages: number = 4
+): PageNumberTile[] => {
+  let pages: PageNumberTile[] = [];
+
+  pages.push(1);
+
+
+  let startContext = Math.max(currentPage - contextPages, 2);
+  let endContext = Math.min(currentPage + contextPages, totalPages - 1);
+
+  if (startContext > 2) {
+    pages.push("...");
+  }
+
+  for (let i = startContext; i <= endContext; i++) {
+    pages.push(i);
+  }
+
+  if (endContext < totalPages - 1) {
+    pages.push("...");
+  }
+
+  if (totalPages > 1) {
+    pages.push(totalPages);
+  }
+
+  return pages;
+};
