@@ -24,7 +24,7 @@ type PageNumberTile = number | "...";
 export const generatePagination = (
   currentPage: number,
   totalPages: number,
-  contextPages: number = 4
+  contextPages = 4
 ): PageNumberTile[] => {
   const pages: PageNumberTile[] = [];
 

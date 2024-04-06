@@ -14,12 +14,14 @@ const ProtectedRoute: React.FC<Props> = ({ children }) => {
   const router = useRouter();
   const navigateToLogin = async () => {
     await router.replace("/auth/login");
-  }
+  };
 
   useEffect(() => {
     const user = localStorage.getItem("userId");
     if (!user) {
-      navigateToLogin();
+      (async () => {
+        await navigateToLogin();
+      })();
     } else {
       setUserLogged(user);
     }
