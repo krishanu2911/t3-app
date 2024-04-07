@@ -6,8 +6,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const LoginComp = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const loginMutation = api.user.login.useMutation();
   const router = useRouter();
   const loginHandler = async () => {
@@ -16,6 +18,7 @@ const LoginComp = () => {
       return;
     }
     try {
+      setLoading(true);
       const { message, success, userId } = await loginMutation.mutateAsync({
         email,
         password,
@@ -32,6 +35,8 @@ const LoginComp = () => {
     } catch (error) {
       //   toast.error(`${error}`);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -58,20 +63,31 @@ const LoginComp = () => {
       </div>
       <div className=" w-full flex flex-col items-start gap-2">
         <h1 className=" text-base">Password</h1>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="text"
-          placeholder="Enter"
-          className=" border border-[#C1C1C1] rounded-md p-4 w-full placeholder:text-[#848484] text-[#848484]"
-        />
+        <div className=" flex flex-row border border-[#C1C1C1] rounded-md p-4 w-full placeholder:text-[#848484] text-[#848484]">
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter"
+            className=" outline-none w-full placeholder:text-[#848484] text-[#848484]"
+          />
+          <button onClick={() => setShowPassword((prev) => !prev)}>
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        </div>
       </div>
-      <button
-        onClick={loginHandler}
-        className=" w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white"
-      >
-        LOGIN
-      </button>
+      {loading ? (
+        <div className=" cursor-not-allowed w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white">
+          <h1>Logging in...</h1>
+        </div>
+      ) : (
+        <button
+          onClick={loginHandler}
+          className=" w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white"
+        >
+          LOGIN
+        </button>
+      )}
       <div className=" h-1 w-full border-t border-t-[#C1C1C1]" />
       <h1 className=" text-base text-center">
         Don’t have an Account?{" "}

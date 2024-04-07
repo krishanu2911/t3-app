@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 
 const SignUpComp = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -16,6 +17,7 @@ const SignUpComp = () => {
 
   const signInUser = async (name: string, email: string, password: string) => {
     try {
+      setLoading(true);
       const data = await signUpUserMutation.mutateAsync({
         name,
         email,
@@ -24,14 +26,16 @@ const SignUpComp = () => {
 
       if (data.otp) {
         setBackendOtpEmail(data.otp, email);
-      await  router.push("/auth/signup/verifyotp");
+        await router.push("/auth/signup/verifyotp");
       } else {
         toast.error(`Please re-try!`);
       }
     } catch (error) {
-    //   toast.error(`${error}`);
-    console.log(error)
+      //   toast.error(`${error}`);
+      console.log(error);
       // TO DO: Save the error message and show client
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,7 +46,7 @@ const SignUpComp = () => {
       password !== "" &&
       emailRegex.test(email)
     ) {
-     await signInUser(userName, email, password);
+      await signInUser(userName, email, password);
     } else {
       toast.error("Please fill all the detail properly.");
     }
@@ -88,12 +92,19 @@ const SignUpComp = () => {
           className=" border border-[#C1C1C1] rounded-md p-4 w-full placeholder:text-[#848484] text-[#848484]"
         />
       </div>
-      <button
-        onClick={signHandler}
-        className=" w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white"
-      >
-        Create account
-      </button>
+
+      {loading ? (
+        <div className=" cursor-not-allowed w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white">
+          <h1>Creating...</h1>
+        </div>
+      ) : (
+        <button
+          onClick={signHandler}
+          className=" w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white"
+        >
+          Create account
+        </button>
+      )}
       <div className=" h-1 w-full border-t border-t-[#C1C1C1]" />
       <h1 className=" text-base text-center">
         Have a account?{" "}

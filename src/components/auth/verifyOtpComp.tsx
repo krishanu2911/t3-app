@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 const VerifyOtpComp = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [userOtp, setUserOtp] = useState<string>("");
   const router = useRouter();
   const verifyotpMutation = api.user.verifyOtp.useMutation();
@@ -21,6 +22,7 @@ const VerifyOtpComp = () => {
       return;
     }
     try {
+      setLoading(true);
       if (email && userOtp.length >= 6) {
         const { message, userId } = await verifyotpMutation.mutateAsync({
           clientOtp: userOtp,
@@ -29,11 +31,13 @@ const VerifyOtpComp = () => {
 
         localStorage.setItem("userId", `${userId}`);
         toast.success(message);
-       await router.push("/");
+        await router.push("/");
       }
     } catch (error) {
-    //   toast.error(`${error}`);
-    console.log(error)
+      //   toast.error(`${error}`);
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -52,12 +56,18 @@ const VerifyOtpComp = () => {
         Test Mode: Backend Otp {backendOtp}
       </h1>
 
-      <button
-        onClick={verifyOtpHandler}
-        className="w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white"
-      >
-        Verify
-      </button>
+      {loading ? (
+        <div className=" cursor-not-allowed w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white">
+          <h1>Verifying...</h1>
+        </div>
+      ) : (
+        <button
+          onClick={verifyOtpHandler}
+          className="w-full rounded-md bg-black py-4 text-center text-base font-semibold text-white"
+        >
+          Verify
+        </button>
+      )}
     </div>
   );
 };
